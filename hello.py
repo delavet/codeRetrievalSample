@@ -1,1 +1,1 @@
-print('hello\'%sLike%\'')
+print('hello fuck')
