@@ -8,20 +8,13 @@ post_file = open('post', 'w', encoding='utf-8')
 code_file = open('code', 'w', encoding='utf-8')
 title_file = open('title', 'w', encoding='utf-8')
 id_file = open('id', 'w', encoding='utf-8')
-topic_file = open('topics', 'r', encoding='utf-8')
 
 question_found = 0
-topics = topic_file.readlines()
-i = 0
-for a in topics:
-    topics[i] = a.strip('\n')
-    i += 1
 
 
 def get_by_tags():
     global question_found
-    print(topics)
-    cur.execute("SELECT \"Id\",\"Body\",\"Tags\",\"Title\" FROM posts WHERE \"PostTypeId\" = 1 LIMIT 1000000")
+    cur.execute("SELECT \"Id\",\"Body\",\"Tags\",\"Title\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\' AND ((\"Tags\" Like \'%sort%\') OR (\"Tags\" Like \'%Database%\') OR (\"Tags\" Like \'%file text%\') OR (\"Tags\" Like \'%graphic%\') OR (\"Tags\" Like \'%thread%\'))")
 
     while 1:
         row = cur.fetchone()
@@ -30,15 +23,16 @@ def get_by_tags():
         if row[2] == None:
             continue
         tags = str(row[2]).strip('<').strip('>').split("><")
-        # if 'java' not in tags:
-        #    continue
+        if 'java' not in tags:
+            continue
+        '''
         haveTag = False
         for tag in tags:
             if tag in topics:
                 haveTag = True
         if haveTag == False:
             continue
-
+        '''
         question_found += 1
 
         answer_query = "SELECT \"Body\" FROM posts WHERE \"ParentId\" = " + str(row[0])
@@ -64,7 +58,6 @@ def get_by_tags():
 get_by_tags()
 print(question_found)
 
-topic_file.close()
 code_file.close()
 post_file.close()
 body_file.close()
