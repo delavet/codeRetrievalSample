@@ -18,9 +18,9 @@ def get_by_tags():
 
     while 1:
         row = cur.fetchone()
-        if row == None:
+        if row is None:
             break
-        if row[2] == None:
+        if row[2] is None:
             continue
         tags = str(row[2]).strip('<').strip('>').split("><")
         if 'java' not in tags:

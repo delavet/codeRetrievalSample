@@ -1,5 +1,4 @@
 from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from collections import defaultdict
 frequency = defaultdict(int)
@@ -12,17 +11,17 @@ st = PorterStemmer()
 for code in code_file:
     tokens = list(word_tokenize(code))
     result = []
-    i = 0 
+    i = 0
     buffer_str = ''
     while i < len(result):
         for j in range(len(tokens[i])):
-            if tokens[i][j].isalpha() and tokens[i][j] >= 'A' and tokens[i][j] <='Z' and buffer_str != '':
+            if tokens[i][j].isalpha() and tokens[i][j] >= 'A' and tokens[i][j] <= 'Z' and buffer_str != '':
                 result.append(buffer_str.lower())
                 buffer_str = tokens[i][j]
             elif tokens[i][j] in splitters and buffer_str != '':
                 result.append(buffer_str.lower())
             else:
-                 buffer_str += tokens[i][j]
+                buffer_str = buffer_str + tokens[i][j]
         i += 1
     i = 0
     while i < len(result):
@@ -40,11 +39,9 @@ for code in code_file:
             none_full_alpha_record.write(result[i]+'\n')
         result[i] = st.stem(result[i])
         frequency[result[i]] += 1
-        i += 1
-        
+        i = i + 1
     result_word = ','.join(result)+'\n'
     mid_file.write(result_word)
-    
 mid_file.close()
 mid_file = open('code_mid_process', 'r', encoding='utf-8')
 for line in mid_file:
