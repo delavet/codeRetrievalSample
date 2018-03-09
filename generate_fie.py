@@ -9,13 +9,18 @@ code_file = open('code', 'w', encoding='utf-8')
 title_file = open('title', 'w', encoding='utf-8')
 id_file = open('id', 'w', encoding='utf-8')
 tag_file = open('tags_record', 'w', encoding='utf-8')
+tid = open('tid', 'w', encoding='utf-8')
+tbody = open('tbody', 'w', encoding='utf-8')
+tpost = open('tpost', 'w', encoding='utf-8')
+tcode = open('tcode', 'w', encoding='utf-8')
+ttitle = open('ttitle', 'w', encoding='utf-8')
 
 question_found = 0
 
 
 def get_by_tags():
     global question_found
-    cur.execute("SELECT \"Id\",\"Body\",\"Tags\",\"Title\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\' AND ((\"Tags\" Like \'%sort%\') OR (\"Tags\" Like \'%Database%\') OR (\"Tags\" Like \'%file text%\') OR (\"Tags\" Like \'%graphic%\') OR (\"Tags\" Like \'%thread%\'))")
+    cur.execute("SELECT \"Id\",\"Body\",\"Tags\",\"Title\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\' LIMIT 100000")
 
     while 1:
         row = cur.fetchone()
@@ -27,14 +32,6 @@ def get_by_tags():
         if 'java' not in tags:
             continue
         tag_file.write(row[2] + '\n')
-        '''
-        haveTag = False
-        for tag in tags:
-            if tag in topics:
-                haveTag = True
-        if haveTag == False:
-            continue
-        '''
         question_found += 1
 
         answer_query = "SELECT \"Body\" FROM posts WHERE \"ParentId\" = " + str(row[0])
@@ -50,16 +47,40 @@ def get_by_tags():
             temp_code = temp_code + code.get_text() + '\t'
             code.clear()
         temp_code.strip('\t')
-        id_file.write(str(row[0]) + '\n')
-        body_file.write(str((temp_body.replace('\r\n', ' ').replace('\n', ' ')))+'\n')
-        post_file.write(str((soup.get_text().replace('\r\n', ' ').replace('\n', ' ')))+'\n')
-        code_file.write(str((temp_code.expandtabs(1).replace('\r\n', '\t').replace('\n', '\t')))+'\n')
-        title_file.write(str((row[3].replace('\r\n', ' ').replace('\n', ' ')))+'\n')
+        try:
+            id_str = str(row[0]) + '\n'
+            body_str = str((temp_body.replace('\r\n', ' ').replace('\n', ' ')))+'\n'
+            post_str = str((soup.get_text().replace('\r\n', ' ').replace('\n', ' ')))+'\n'
+            code_str = str((temp_code.expandtabs(1).replace('\r\n', '\t').replace('\n', '\t')))+'\n'
+            title_str = str((row[3].replace('\r\n', ' ').replace('\n', ' ')))+'\n'
+            id_str = id_str.encode().decode('utf8', 'replace')
+            body_str = body_str.encode().decode('utf8', 'replace')
+            post_str = post_str.encode().decode('utf8', 'replace')
+            code_str = code_str.encode().decode('utf8', 'replace')
+            title_str = title_str.encode().decode('utf8', 'replace')
+            tid.write(id_str)
+            tbody.write(body_str)
+            tpost.write(post_str)
+            tcode.write(code_str)
+            ttitle.write(title_str)
+        except UnicodeEncodeError:
+            pass
+        else:
+            id_file.write(id_str)
+            body_file.write(body_str)
+            post_file.write(post_str)
+            code_file.write(code_str)
+            title_file.write(title_str)
 
 
 get_by_tags()
 print(question_found)
 
+tbody.close()
+tcode.close()
+tid.close()
+tpost.close()
+ttitle.close()
 tag_file.close()
 code_file.close()
 post_file.close()
