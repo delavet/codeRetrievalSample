@@ -7,7 +7,7 @@ import warnings
 trained_model = 'trained_LDA_model.model'
 trained_index = 'trained_LDA_index.index'
 tfidf_model = 'tfidf_for_LDA.model'
-query = "select max max value from array"
+query = "thread synchronization"
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 post_file = open('post', 'r', encoding='utf-8')
 code_file = open('code', 'r', encoding='utf-8')
@@ -39,9 +39,7 @@ print(q_filterer_stop)
 q_bow = dictionary.doc2bow(q_filterer_stop)
 
 print(q_bow)
-q_tfidf = tfidf[q_bow]
-print(q_tfidf)
-q_lda = lda[q_tfidf]
+q_lda = lda[q_bow]
 print(q_lda)
 
 sims = index[q_lda]

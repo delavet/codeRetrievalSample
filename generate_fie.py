@@ -8,6 +8,7 @@ post_file = open('post', 'w', encoding='utf-8')
 code_file = open('code', 'w', encoding='utf-8')
 title_file = open('title', 'w', encoding='utf-8')
 id_file = open('id', 'w', encoding='utf-8')
+tag_file = open('tags_record', 'w', encoding='utf-8')
 
 question_found = 0
 
@@ -25,6 +26,7 @@ def get_by_tags():
         tags = str(row[2]).strip('<').strip('>').split("><")
         if 'java' not in tags:
             continue
+        tag_file.write(row[2] + '\n')
         '''
         haveTag = False
         for tag in tags:
@@ -58,6 +60,7 @@ def get_by_tags():
 get_by_tags()
 print(question_found)
 
+tag_file.close()
 code_file.close()
 post_file.close()
 body_file.close()

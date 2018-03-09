@@ -7,22 +7,41 @@ mid_file = open('code_mid_process', 'w', encoding='utf-8')
 final_file = open('code_mid_preprocessed1', 'w', encoding='utf-8')
 none_full_alpha_record = open('code_none_full_alpha_record', 'w', encoding='utf-8')
 splitters = ['-', '_']
+numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
 st = PorterStemmer()
 for code in code_file:
+    '''
     tokens = list(word_tokenize(code))
     result = []
     i = 0
     buffer_str = ''
-    while i < len(result):
+    while i < len(tokens):
         for j in range(len(tokens[i])):
             if tokens[i][j].isalpha() and tokens[i][j] >= 'A' and tokens[i][j] <= 'Z' and buffer_str != '':
                 result.append(buffer_str.lower())
                 buffer_str = tokens[i][j]
-            elif tokens[i][j] in splitters and buffer_str != '':
-                result.append(buffer_str.lower())
+            elif not tokens[i][j].isalpha():
+                if buffer_str != '':
+                    result.append(buffer_str.lower())
+                    buffer_str = ''
             else:
                 buffer_str = buffer_str + tokens[i][j]
         i += 1
+    i = 0
+    '''
+    result = []
+    buffer_str = ''
+    for j in range(len(code)):
+        if code[j].isalpha() and code[j] >= 'A' and code[j] <= 'Z' and buffer_str != '':
+            result.append(buffer_str.lower())
+            buffer_str = code[j]
+        elif not code[j].isalpha():
+            if buffer_str != '':
+                result.append(buffer_str.lower())
+                buffer_str = ''
+        else:
+            buffer_str = buffer_str + code[j]
+
     i = 0
     while i < len(result):
         is_soy = True
@@ -32,6 +51,8 @@ for code in code_file:
                 is_soy = False
             if not result[i][j].isalpha():
                 full_alpha = False
+        if len(result[i]) <= 2:
+            is_soy = True
         if is_soy:
             result.pop(i)
             continue
@@ -46,7 +67,7 @@ mid_file.close()
 mid_file = open('code_mid_process', 'r', encoding='utf-8')
 for line in mid_file:
     tokens = line.strip('\n').split(',')
-    tokens = [token for token in tokens if frequency[token] > 3]
+    tokens = [token for token in tokens if frequency[token] > 10]
     result_word = ','.join(tokens)+'\n'
     final_file.write(result_word)
 final_file.close()
