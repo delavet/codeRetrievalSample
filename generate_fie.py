@@ -20,7 +20,7 @@ question_found = 0
 
 def get_by_tags():
     global question_found
-    cur.execute("SELECT \"Id\",\"Body\",\"Tags\",\"Title\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\' LIMIT 100000")
+    cur.execute("SELECT \"Id\",\"Body\",\"Tags\",\"Title\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\'")
 
     while 1:
         row = cur.fetchone()
