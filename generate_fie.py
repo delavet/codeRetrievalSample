@@ -18,11 +18,7 @@ question_found = 0
 def get_by_tags():
     global question_found
     cur.execute("SELECT \"Id\",\"Body\",\"Tags\",\"Title\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\'")
-    i = 0
     while 1:
-        i += 1
-        if not i % 1000:
-            print(str(i))
         row = cur.fetchone()
         if row is None:
             break
@@ -60,7 +56,6 @@ def get_by_tags():
             title_str = title_str.encode("utf-8", "surrogateescape").decode("utf-8")
             tbody.write(post_str)
         except Exception:
-            print(str(i))
             pass
         else:
             id_file.write(id_str)
