@@ -9,20 +9,20 @@ code_file = open('code', 'w', encoding='utf-8')
 title_file = open('title', 'w', encoding='utf-8')
 id_file = open('id', 'w', encoding='utf-8')
 tag_file = open('tags_record', 'w', encoding='utf-8')
-tid = open('tid', 'w', encoding='utf-8')
 tbody = open('tbody', 'w', encoding='utf-8')
-tpost = open('tpost', 'w', encoding='utf-8')
-tcode = open('tcode', 'w', encoding='utf-8')
-ttitle = open('ttitle', 'w', encoding='utf-8')
+
 
 question_found = 0
 
 
 def get_by_tags():
     global question_found
-    cur.execute("SELECT \"Id\",\"Body\",\"Tags\",\"Title\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\' LIMIT 100000")
-
+    cur.execute("SELECT \"Id\",\"Body\",\"Tags\",\"Title\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\'")
+    i = 0
     while 1:
+        i += 1
+        if not i % 1000:
+            print(str(i))
         row = cur.fetchone()
         if row is None:
             break
@@ -50,20 +50,17 @@ def get_by_tags():
         try:
             id_str = str(row[0]) + '\n'
             body_str = str((temp_body.replace('\r\n', ' ').replace('\n', ' ')))+'\n'
-            post_str = str((soup.get_text().replace('\r\n', ' ').replace('\n', ' ')))+'\n'
+            post_str = str((soup.get_text(separator=",").replace('\r\n', ' ').replace('\n', ' ')))+'\n'
             code_str = str((temp_code.expandtabs(1).replace('\r\n', '\t').replace('\n', '\t')))+'\n'
             title_str = str((row[3].replace('\r\n', ' ').replace('\n', ' ')))+'\n'
-            id_str = id_str.encode().decode('utf8', 'replace')
-            body_str = body_str.encode().decode('utf8', 'replace')
-            post_str = post_str.encode().decode('utf8', 'replace')
-            code_str = code_str.encode().decode('utf8', 'replace')
-            title_str = title_str.encode().decode('utf8', 'replace')
-            tid.write(id_str)
-            tbody.write(body_str)
-            tpost.write(post_str)
-            tcode.write(code_str)
-            ttitle.write(title_str)
-        except UnicodeEncodeError:
+            id_str = id_str.encode("utf-8", "surrogateescape").decode("utf-8")
+            body_str = body_str.encode("utf-8", "surrogateescape").decode("utf-8")
+            post_str = post_str.encode("utf-8", "surrogateescape").decode("utf-8")
+            code_str = code_str.encode("utf-8", "surrogateescape").decode("utf-8")
+            title_str = title_str.encode("utf-8", "surrogateescape").decode("utf-8")
+            tbody.write(post_str)
+        except Exception:
+            print(str(i))
             pass
         else:
             id_file.write(id_str)
@@ -75,12 +72,7 @@ def get_by_tags():
 
 get_by_tags()
 print(question_found)
-
 tbody.close()
-tcode.close()
-tid.close()
-tpost.close()
-ttitle.close()
 tag_file.close()
 code_file.close()
 post_file.close()
