@@ -7,7 +7,7 @@ import warnings
 trained_model = 'trained_LDA_model.model'
 trained_index = 'trained_LDA_index.index'
 tfidf_model = 'tfidf_for_LDA.model'
-query = raw_input("enter you query:")
+query = input("enter you query:")
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 post_file = open('post', 'r', encoding='utf-8')
 code_file = open('code', 'r', encoding='utf-8')
