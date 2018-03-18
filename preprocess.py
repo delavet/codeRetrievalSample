@@ -35,7 +35,7 @@ mid_file.close()
 mid_file = open('mid_process', 'r', encoding='utf-8')
 for line in mid_file:
     tokens = line.strip('\n').split(',')
-    tokens = [token for token in tokens if frequency[token] > 3]
+    tokens = [token for token in tokens if frequency[token] > 10 and len(token) > 1]
     result_word = ','.join(tokens)+'\n'
     final_file.write(result_word)
 final_file.close()
