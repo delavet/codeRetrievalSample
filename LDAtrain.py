@@ -7,7 +7,7 @@ preprocessed_file = open('preprocessed', 'r', encoding='utf-8')
 texts = [line.strip('\n').split(',') for line in preprocessed_file]
 dictionary = corpora.Dictionary(texts)
 
-number = 10
+number = 15
 
 
 class MyCorpus(object):
@@ -32,7 +32,7 @@ def train():
     tfidf = models.TfidfModel(corpus)
     tfidf.save('tfidf_for_LDA.model')
     corpus_tfidf = tfidf[corpus]
-    lda = models.LdaModel(corpus, id2word=dictionary, num_topics=20, iterations=8000)
+    lda = models.LdaModel(corpus, id2word=dictionary, num_topics=number, iterations=8000)
     lda.save('trained_LDA_model.model')
     index = similarities.MatrixSimilarity(lda[corpus_tfidf])
     index.save('trained_LDA_index.index')
