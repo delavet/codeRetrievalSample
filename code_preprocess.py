@@ -9,8 +9,8 @@ none_full_alpha_record = open('code_none_full_alpha_record', 'w', encoding='utf-
 splitters = ['-', '_']
 st = PorterStemmer()
 for code in code_file:
-    code_after_first_preprocess = re.sub("[^0-9a-zA-Z]", ",", code)
-    tokens = code_after_first_preprocess.split(",")
+    code_after_first_preprocess = re.sub("[^a-zA-Z]", ",", code)
+    tokens = [token for token in code_after_first_preprocess.split(",") if len(token) > 2]
     result = []
     i = 0
     buffer_str = ''
@@ -25,6 +25,7 @@ for code in code_file:
             else:
                 buffer_str = buffer_str + tokens[i][j]
         result.append(buffer_str.lower())
+        buffer_str = ''
         i += 1
     i = 0
     while i < len(result):
@@ -50,7 +51,7 @@ mid_file.close()
 mid_file = open('code_mid_process', 'r', encoding='utf-8')
 for line in mid_file:
     tokens = line.strip('\n').split(',')
-    tokens = [token for token in tokens if frequency[token] > 3]
+    tokens = [token for token in tokens if frequency[token] > 10]
     result_word = ','.join(tokens)+'\n'
     final_file.write(result_word)
 final_file.close()
