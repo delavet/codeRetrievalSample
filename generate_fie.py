@@ -37,7 +37,7 @@ def get_by_tags():
         temp_body = row[1]
         for answer in answers:
             temp_body = temp_body + answer[0]
-        soup = BeautifulSoup(temp_body, "html.parser")
+        soup = BeautifulSoup(temp_body, "html5lib")
         temp_code = ''
         for code in soup.find_all('pre'):
             temp_code = temp_code + code.get_text() + '\t'
