@@ -7,7 +7,7 @@ preprocessed_file = open('preprocessed', 'r', encoding='utf-8')
 texts = [line.strip('\n').split(',') for line in preprocessed_file]
 dictionary = corpora.Dictionary(texts)
 
-number = 15
+number = 140
 
 
 class MyCorpus(object):
