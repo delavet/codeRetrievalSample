@@ -1,14 +1,14 @@
 from gensim import corpora, models, similarities
 from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from pprint import pprint
 import warnings
+warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 trained_model = 'trained_LDA_model.model'
 trained_index = 'trained_LDA_index.index'
 tfidf_model = 'tfidf_for_LDA.model'
-query = input("enter you query:")
-warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
+query = "When a JTable component is created, cell editing is enabled by default. How can I prevent the user from editing the content of a JTable?"  # input("enter you query:")""
+
 post_file = open('post', 'r', encoding='utf-8')
 code_file = open('code', 'r', encoding='utf-8')
 stemmed_file = open('preprocessed', 'r', encoding='utf-8')

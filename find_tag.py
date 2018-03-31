@@ -8,7 +8,7 @@ raw_tag_file = open('raw_java_tags_record', 'w', encoding='utf-8')
 
 def get_tags():
     full_tags = []
-    cur.execute("SELECT \"Tags\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\'")
+    cur.execute("SELECT \"Tags\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\' AND (\"Tags\" Like \'%%sort%\' OR \"Tags\" Like \'%%Database%\' OR \"Tags\" Like \'%%file-text%\' OR \"Tags\" Like \'%%graphic%\' OR \"Tags\" Like \'%%thread%\')")
     while 1:
         row = cur.fetchone()
         if row is None:
@@ -19,7 +19,8 @@ def get_tags():
         if 'java' not in tags:
             continue
         for tag in tags:
-            if tag not in full_tags:
+            temp = tag + '\n'
+            if temp not in full_tags:
                 full_tags.append(tag+'\n')
         raw_tag_file.write(row[0] + '\n')
     tag_file.writelines(full_tags)
