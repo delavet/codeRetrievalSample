@@ -17,7 +17,7 @@ question_found = 0
 
 def get_by_tags():
     global question_found
-    cur.execute("SELECT \"Id\",\"Body\",\"Tags\",\"Title\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\' AND (\"Tags\" Like \'%%jtable%\')")
+    cur.execute("SELECT \"Id\",\"Body\",\"Tags\",\"Title\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\' AND (\"Tags\" Like \'%%sort%\' OR \"Tags\" Like \'%%Database%\' OR \"Tags\" Like \'%%file text%\' OR \"Tags\" Like \'%%graphic%\' OR \"Tags\" Like \'%%thread%\')")
     while 1:
         row = cur.fetchone()
         if row is None:
@@ -37,7 +37,7 @@ def get_by_tags():
         temp_body = row[1]
         for answer in answers:
             temp_body = temp_body + answer[0]
-        soup = BeautifulSoup(temp_body, "html5lib")
+        soup = BeautifulSoup(temp_body, "lxml")
         temp_code = ''
         for code in soup.find_all('pre'):
             temp_code = temp_code + code.get_text() + '\t'

@@ -1,13 +1,14 @@
 import warnings
-warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 from gensim import corpora, models, similarities
 from pprint import pprint
+warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
 preprocessed_file = open('preprocessed', 'r', encoding='utf-8')
 texts = [line.strip('\n').split(',') for line in preprocessed_file]
 dictionary = corpora.Dictionary(texts)
+dictionary.save('dict_lda.dict')
 
-number = 140
+number = 20
 
 
 class MyCorpus(object):
@@ -34,10 +35,13 @@ def train():
     corpus_tfidf = tfidf[corpus]
     lda = models.LdaModel(corpus, id2word=dictionary, num_topics=number, iterations=8000)
     lda.save('trained_LDA_model.model')
-    index = similarities.MatrixSimilarity(lda[corpus_tfidf])
+    topics = lda.print_topics(num_topics=20, num_words=30)
+    pprint(topics)
+    index = similarities.MatrixSimilarity(lda[corpus])
+    tf_idf_index = similarities.MatrixSimilarity(corpus_tfidf, num_features=len(dictionary.keys()))
     index.save('trained_LDA_index.index')
+    tf_idf_index.save('trained_tfidf_for_LDA_index.index')
     print('trained!')
 
 
 train()
-

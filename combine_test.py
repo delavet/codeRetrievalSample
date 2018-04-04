@@ -1,13 +1,14 @@
 from gensim import corpora, models, similarities
 from nltk.tokenize import word_tokenize
 from nltk.stem.porter import PorterStemmer
-from pprint import pprint
 import warnings
+
+
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 trained_model = 'trained_LDA_model.model'
 trained_index = 'trained_LDA_index.index'
 tfidf_model = 'tfidf_for_LDA.model'
-query = "how to draw a rectangle in swing"
+query = "how to paint rectangle in swing"
 
 post_file = open('post', 'r', encoding='utf-8')
 code_file = open('code', 'r', encoding='utf-8')
@@ -21,6 +22,7 @@ dictionary = corpora.Dictionary(line.strip('\n').split(',') for line in preproce
 
 lda = models.LdaModel.load(trained_model)
 index = similarities.MatrixSimilarity.load(trained_index)
+tfidf_index = similarities.MatrixSimilarity.load('trained_tfidf_for_LDA_index.index')
 tfidf = models.TfidfModel.load(tfidf_model)
 
 q_tokenized = [word.lower() for word in word_tokenize(query)]
@@ -40,12 +42,17 @@ q_bow = dictionary.doc2bow(q_filterer_stop)
 
 print(q_bow)
 q_lda = lda[q_bow]
+q_tfidf = tfidf[q_bow]
 print(q_lda)
 
-sims = index[q_lda]
+sims = tfidf_index[q_tfidf]
+lda_sims = index[q_lda]
+filtered_lda_num = [sim[0] for sim in enumerate(lda_sims) if sim[1] > 0.9]
 sorted_sims = sorted(enumerate(sims), key=lambda item: -item[1])
+filtered_sims = [sim for sim in sorted_sims if sim[0] in filtered_lda_num]
+
 i = 0
-for result in sorted_sims:
+for result in filtered_sims:
     if(len(code_lines[result[0]]) < 20):
         continue
     i = i + 1
@@ -53,20 +60,22 @@ for result in sorted_sims:
         break
     print('result NO.' + str(i))
     print('code content:')
-    pprint(code_lines[result[0]])
+    print(code_lines[result[0]])
     print('post content:')
-    pprint(post_lines[result[0]])
+    print(post_lines[result[0]])
+    '''
     stemmed = stemmed_lines[result[0]]
     ans_doc2bow = dictionary.doc2bow(stemmed.strip('\n').split(','))
     print('doc2bow:')
-    pprint(ans_doc2bow)
+    print(ans_doc2bow)
     ans_tfidf = tfidf[ans_doc2bow]
     print('tfidf:')
-    pprint(ans_tfidf)
+    print(ans_tfidf)
     ans_lda = lda[ans_tfidf]
     print('lda:')
-    pprint(ans_lda)
+    print(ans_lda)
     print('\n')
+    '''
 
 preprocessed_file.close()
 code_file.close()
