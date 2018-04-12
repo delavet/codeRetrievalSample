@@ -29,6 +29,7 @@ for code in code_file:
         i += 1
     i = 0
     while i < len(result):
+        this_record = []
         is_soy = True
 
         full_alpha = True
@@ -43,12 +44,17 @@ for code in code_file:
         if not full_alpha:
             none_full_alpha_record.write(result[i]+'\n')
         result[i] = st.stem(result[i])
-        frequency[result[i]] += 1
+        if result[i] not in this_record:
+            frequency[result[i]] += 1
+            this_record.append(result[i])
         i = i + 1
     result_word = ','.join(result)+'\n'
+    if len(result) < 1:
+        result_word = 'soysucks\n'
     mid_file.write(result_word)
 mid_file.close()
 mid_file = open('code_mid_process', 'r', encoding='utf-8')
+frequency['soysucks'] = 100
 for line in mid_file:
     tokens = line.strip('\n').split(',')
     tokens = [token for token in tokens if frequency[token] > 10]

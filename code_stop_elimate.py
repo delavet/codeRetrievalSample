@@ -16,18 +16,6 @@ for i in range(len(trigrams)):
 for line in preprocessed_file:
     tokens = line.strip('\n').split(',')
     i = 0
-    while i < len(tokens) - 2:
-        tri = tokens[i] + ' ' + tokens[i + 1] + ' ' + tokens[i + 2]
-        found = False
-        for t in trigrams:
-            if tri == t:
-                tokens.pop(i)
-                tokens.pop(i)
-                tokens.pop(i)
-                found = True
-        if not found:
-            i += 1
-    i = 0
     while i < len(tokens) - 1:
         bi = tokens[i] + ' ' + tokens[i + 1]
         found = False
