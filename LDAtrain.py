@@ -6,7 +6,6 @@ warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 preprocessed_file = open('preprocessed', 'r', encoding='utf-8')
 texts = [line.strip('\n').split(',') for line in preprocessed_file]
 dictionary = corpora.Dictionary(texts)
-dictionary.save('dict_lda.dict')
 
 number = 20
 
