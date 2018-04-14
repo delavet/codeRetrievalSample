@@ -17,7 +17,7 @@ question_found = 0
 
 def get_by_tags():
     global question_found
-    cur.execute("SELECT \"Id\",\"Body\",\"Tags\",\"Title\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\' AND (\"Tags\" Like \'%%sort%\' OR \"Tags\" Like \'%%Database%\' OR \"Tags\" Like \'%%file text%\' OR \"Tags\" Like \'%%graphic%\' OR \"Tags\" Like \'%%thread%\')")
+    cur.execute("SELECT \"Id\",\"Body\",\"Tags\",\"Title\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\'")
     while 1:
         row = cur.fetchone()
         if row is None:
@@ -78,4 +78,5 @@ answer_cur.close()
 conn.close()
 '''
 .encode("utf-8", "surrogateescape")
+ AND (\"Tags\" Like \'%%sort%\' OR \"Tags\" Like \'%%Database%\' OR \"Tags\" Like \'%%file text%\' OR \"Tags\" Like \'%%graphic%\' OR \"Tags\" Like \'%%thread%\')
 '''
