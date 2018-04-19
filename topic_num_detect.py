@@ -4,24 +4,33 @@ from sklearn import preprocessing
 import scipy.stats
 from numpy import linalg
 from code_lda_train import MyCodeCorpus
+from LDAtrain import MyCorpus
+from title_LDAtrain import MyTitleCorpus
 import warnings
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
-
-preprocessed_file = open('code_preprocessed', 'r', encoding='utf-8')
+post_name = 'preprocessed'
+title_name = 'title_preprocessed'
+code_name = 'code_preprocessed'
 measure_file = open('measure', 'w', encoding='utf-8')
-texts = [line.strip('\n').split(',') for line in preprocessed_file]
-dictionary = corpora.Dictionary(texts)
-L = [len(text) for text in texts]
-preprocessed_file.close()
 
 
 def my_cmp(x, y):
     return y - x
 
 
-def test_topic_num(topic_num):
-    corpus = MyCodeCorpus()
+def test_topic_num(topic_num, name):
+    preprocessed_file = open(name, 'r', encoding='utf-8')
+    texts = [line.strip('\n').split(',') for line in preprocessed_file]
+    dictionary = corpora.Dictionary(texts)
+    L = [len(text) for text in texts]
+    corpus = None
+    if name == post_name:
+        corpus = MyCorpus()
+    elif name == title_name:
+        corpus = MyTitleCorpus()
+    else:
+        corpus = MyCodeCorpus()
     lda = models.LdaModel(corpus, id2word=dictionary, num_topics=topic_num, iterations=4000)
     M1 = lda.get_topics()
     u, m1_sigma, vh = linalg.svd(M1)
@@ -50,10 +59,20 @@ def test_topic_num(topic_num):
     measure = KL1 + KL2
     write_str = str(topic_num) + ':' + str(measure) + '\n'
     measure_file.write(write_str)
+    preprocessed_file.close()
 
 
-numbers = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150]
-for num in numbers:
-    test_topic_num(num)
+def real_test(name):
+    for num in range(10, 150):
+        test_topic_num(num, name)
+
+
+i = input('train what?t p or c?')
+if i == 't':
+    real_test(title_name)
+elif i == 'p':
+    real_test(post_name)
+else:
+    real_test(code_name)
 measure_file.close()
 print('done')

@@ -1,9 +1,9 @@
 from collections import defaultdict
 import heapq
 all_cnt = 16986
-elect = 300
-unigram_file = open('unigram_stops', 'w', encoding='utf-8')
-preprocessed_file = open('mid_preprocessed1', 'r', encoding='utf-8')
+elect = 200
+unigram_file = open('title_unigram_stops', 'w', encoding='utf-8')
+preprocessed_file = open('title_mid_preprocessed1', 'r', encoding='utf-8')
 frequency = defaultdict(int)
 for line in preprocessed_file:
     unigrams = line.strip('\n').split(',')
@@ -17,8 +17,8 @@ for key in frequency.keys():
 unigram_file.close()
 preprocessed_file.close()
 
-preprocessed_file = open('mid_preprocessed1', 'r', encoding='utf-8')
-bigram_file = open('bigram_stops', 'w', encoding='utf-8')
+preprocessed_file = open('title_mid_preprocessed1', 'r', encoding='utf-8')
+bigram_file = open('title_bigram_stops', 'w', encoding='utf-8')
 bifrequency = defaultdict(int)
 for line in preprocessed_file:
     tokens = line.strip('\n').split(',')
@@ -37,8 +37,8 @@ for key in bifrequency.keys():
 bigram_file.close()
 preprocessed_file.close()
 
-preprocessed_file = open('mid_preprocessed1', 'r', encoding='utf-8')
-trigram_file = open('trigram_stops', 'w', encoding='utf-8')
+preprocessed_file = open('title_mid_preprocessed1', 'r', encoding='utf-8')
+trigram_file = open('title_trigram_stops', 'w', encoding='utf-8')
 trifrequency = defaultdict(int)
 for line in preprocessed_file:
     tokens = line.strip('\n').split(',')

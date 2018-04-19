@@ -13,21 +13,34 @@ code_trained_model = 'code_trained_LDA_model.model'
 code_trained_index = 'code_trained_LDA_index.index'
 code_tfidf_model = 'code_tfidf_for_LDA.model'
 code_tfidf_index = similarities.MatrixSimilarity.load('code_trained_tfidf_for_LDA_index.index')
+title_trained_model = 'title_trained_LDA_model.model'
+title_trained_index = 'title_trained_LDA_index.index'
+title_tfidf_model = 'title_tfidf_for_LDA.model'
+title_tfidf_index = similarities.MatrixSimilarity.load('title_trained_tfidf_for_LDA_index.index')
 query = input("input query:")
 
 post_file = open('post', 'r', encoding='utf-8')
 code_file = open('code', 'r', encoding='utf-8')
+title_file = open('title', 'r', encoding='utf-8')
+
 stemmed_file = open('preprocessed', 'r', encoding='utf-8')
 stopwords_file = open('unigram_stops', 'r', encoding='utf-8')
 code_stemmed_file = open('code_preprocessed', 'r', encoding='utf-8')
 code_stopwords_file = open('code_unigram_stops', 'r', encoding='utf-8')
+title_stemmed_file = open('title_preprocessed', 'r', encoding='utf-8')
+title_stopwords_file = open('title_unigram_stops', 'r', encoding='utf-8')
+
 post_lines = post_file.readlines()
 code_lines = code_file.readlines()
+title_lines = title_file.readlines()
+
 stemmed_lines = stemmed_file.readlines()
 preprocessed_file = open('preprocessed', 'r', encoding='utf-8')
 code_preprocessed_file = open('code_preprocessed', 'r', encoding='utf-8')
+title_preprocessed_file = open('title_preprocessed', 'r', encoding='utf-8')
 dictionary = corpora.Dictionary(line.strip('\n').split(',') for line in preprocessed_file)
 code_dictionary = corpora.Dictionary(line.strip('\n').split(',') for line in code_preprocessed_file)
+title_dictionary = corpora.Dictionary(line.strip('\n').split(',') for line in title_preprocessed_file)
 
 lda = models.LdaModel.load(trained_model)
 index = similarities.MatrixSimilarity.load(trained_index)
@@ -35,6 +48,9 @@ tfidf = models.TfidfModel.load(tfidf_model)
 code_lda = models.LdaModel.load(code_trained_model)
 code_index = similarities.MatrixSimilarity.load(code_trained_index)
 code_tfidf = models.TfidfModel.load(code_tfidf_model)
+title_lda = models.LdaModel.load(title_trained_model)
+title_index = similarities.MatrixSimilarity.load(title_trained_index)
+title_tfidf = models.TfidfModel.load(title_tfidf_model)
 
 q_tokenized = [word.lower() for word in word_tokenize(query)]
 english_stopwords = [word.strip('\n') for word in stopwords_file]
@@ -51,17 +67,22 @@ q_filterer_stop = [word for word in q_stemmed if word not in english_stopwords]
 print(q_filterer_stop)
 q_bow = dictionary.doc2bow(q_filterer_stop)
 code_q_bow = code_dictionary.doc2bow(q_filterer_stop)
+title_q_bow = title_dictionary.doc2bow(q_filterer_stop)
 
 
 q_lda = lda[q_bow]
 q_tfidf = tfidf[q_bow]
 code_q_lda = code_lda[code_q_bow]
 code_q_tfidf = code_tfidf[code_q_bow]
+title_q_lda = title_lda[title_q_bow]
+title_q_tfidf = title_tfidf[title_q_bow]
 
 tfidf_sims = tfidf_index[q_tfidf]
 lda_sims = index[q_lda]
 code_tfidf_sims = code_tfidf_index[code_q_tfidf]
 code_lda_sims = code_index[code_q_lda]
+title_tfidf_sims = title_tfidf_index[title_q_tfidf]
+title_lda_sims = title_index[title_q_lda]
 
 
 filtered_num = [sim[0] for sim in enumerate(code_lda_sims) if sim[1] <= 0.7]
@@ -75,9 +96,10 @@ for num in filtered_num:
 for i in range(len(tfidf_sims)):
     a = code_tfidf_sims[i]
     b = tfidf_sims[i]
+    c = title_tfidf_sims[i]
     if a < 0.5 and b > 0.7:
         b = 0.7
-    sims.append((i, a+b))
+    sims.append((i, 2*a+b+4*c))
 sorted_sims = sorted(sims, key=lambda item: -item[1])
 
 i = 0
@@ -90,8 +112,12 @@ for result in sorted_sims:
     print('result NO.' + str(i))
     print('code tfidf sim: ' + str(code_tfidf_sims[result[0]]))
     print('post tfidf sim: ' + str(tfidf_sims[result[0]]))
+    print('title tfidf sim:' + str(title_lda_sims[result[0]]))
     print('code lda sim: ' + str(code_lda_sims[result[0]]))
     print('post lda sim: ' + str(lda_sims[result[0]]))
+    print('title lda sim: ' + str(title_lda_sims[result[0]]))
+    print('title content:')
+    print(title_lines[result[0]])
     print('code content:')
     print(code_lines[result[0]])
     print('post content:')
@@ -99,3 +125,4 @@ for result in sorted_sims:
 preprocessed_file.close()
 code_file.close()
 post_file.close()
+title_file.close()

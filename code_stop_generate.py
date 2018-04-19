@@ -13,7 +13,7 @@ top50 = heapq.nlargest(elect, frequency.values())
 print(top50)
 for key in frequency.keys():
     if frequency[key] in top50:
-        unigram_file.write(key+'\n')
+        unigram_file.write(key+":"+str(frequency[key])+'\n')
 unigram_file.close()
 preprocessed_file.close()
 
@@ -33,7 +33,7 @@ bitop50 = heapq.nlargest(elect, bifrequency.values())
 print(bitop50)
 for key in bifrequency.keys():
     if bifrequency[key] in bitop50:
-        bigram_file.write(key+'\n')
+        bigram_file.write(key+":"+str(bifrequency[key])+'\n')
 bigram_file.close()
 preprocessed_file.close()
 
@@ -53,6 +53,6 @@ tritop50 = heapq.nlargest(elect, trifrequency.values())
 print(tritop50)
 for key in trifrequency.keys():
     if trifrequency[key] in tritop50:
-        trigram_file.write(key+'\n')
+        trigram_file.write(key+":"+str(trifrequency[key])+'\n')
 trigram_file.close()
 preprocessed_file.close()
