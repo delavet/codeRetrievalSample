@@ -1,30 +1,10 @@
 import warnings
-from gensim import corpora, models, similarities
+from gensim import models, similarities
 from pprint import pprint
+from my_corpuses import MyTitleCorpus, t_dictionary
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
-preprocessed_file = open('title_preprocessed', 'r', encoding='utf-8')
-texts = [line.strip('\n').split(',') for line in preprocessed_file]
-dictionary = corpora.Dictionary(texts)
-
-number = 20
-
-
-class MyTitleCorpus(object):
-    def __iter__(self):
-        for line in open('title_preprocessed', encoding='utf-8'):
-            yield dictionary.doc2bow(line.strip('\n').split(','))
-
-    def __len__(self):
-        count = 0
-        the_file = open('title_preprocessed', encoding='utf-8')
-        while True:
-            buffer = the_file.read(1024 * 8192)
-            if not buffer:
-                break
-            count += buffer.count('\n')
-        the_file.close()
-        return count
+number = 49
 
 
 def train():
@@ -32,12 +12,12 @@ def train():
     tfidf = models.TfidfModel(corpus)
     tfidf.save('title_tfidf_for_LDA.model')
     corpus_tfidf = tfidf[corpus]
-    lda = models.LdaModel(corpus, id2word=dictionary, num_topics=number, iterations=8000)
+    lda = models.LdaModel(corpus, id2word=t_dictionary, num_topics=number, iterations=8000)
     lda.save('title_trained_LDA_model.model')
     topics = lda.print_topics(num_topics=20, num_words=30)
     pprint(topics)
     index = similarities.MatrixSimilarity(lda[corpus])
-    tf_idf_index = similarities.MatrixSimilarity(corpus_tfidf, num_features=len(dictionary.keys()))
+    tf_idf_index = similarities.MatrixSimilarity(corpus_tfidf, num_features=len(t_dictionary.keys()))
     index.save('title_trained_LDA_index.index')
     tf_idf_index.save('title_trained_tfidf_for_LDA_index.index')
     print('trained!')

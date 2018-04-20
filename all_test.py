@@ -1,6 +1,8 @@
-from gensim import corpora, models, similarities
+from gensim import models, similarities
 from nltk.tokenize import word_tokenize
 from nltk.stem.porter import PorterStemmer
+from my_corpuses import c_dictionary, t_dictionary, p_dictionary
+import linecache
 import warnings
 
 
@@ -30,17 +32,12 @@ code_stopwords_file = open('code_unigram_stops', 'r', encoding='utf-8')
 title_stemmed_file = open('title_preprocessed', 'r', encoding='utf-8')
 title_stopwords_file = open('title_unigram_stops', 'r', encoding='utf-8')
 
-post_lines = post_file.readlines()
-code_lines = code_file.readlines()
-title_lines = title_file.readlines()
-
-stemmed_lines = stemmed_file.readlines()
 preprocessed_file = open('preprocessed', 'r', encoding='utf-8')
 code_preprocessed_file = open('code_preprocessed', 'r', encoding='utf-8')
 title_preprocessed_file = open('title_preprocessed', 'r', encoding='utf-8')
-dictionary = corpora.Dictionary(line.strip('\n').split(',') for line in preprocessed_file)
-code_dictionary = corpora.Dictionary(line.strip('\n').split(',') for line in code_preprocessed_file)
-title_dictionary = corpora.Dictionary(line.strip('\n').split(',') for line in title_preprocessed_file)
+dictionary = p_dictionary
+code_dictionary = c_dictionary
+title_dictionary = t_dictionary
 
 lda = models.LdaModel.load(trained_model)
 index = similarities.MatrixSimilarity.load(trained_index)
@@ -87,24 +84,25 @@ title_lda_sims = title_index[title_q_lda]
 
 filtered_num = [sim[0] for sim in enumerate(code_lda_sims) if sim[1] <= 0.7]
 sims = []
-'''
+
 for num in filtered_num:
     tfidf_sims[num] = 0.0
     lda_sims[num] = 0.0
     code_tfidf_sims[num] = 0.0
-'''
+    title_tfidf_sims[num] = 0.0
+
 for i in range(len(tfidf_sims)):
     a = code_tfidf_sims[i]
     b = tfidf_sims[i]
     c = title_tfidf_sims[i]
     if a < 0.5 and b > 0.7:
         b = 0.7
-    sims.append((i, 2*a+b+4*c))
+    sims.append((i, 2*a+b+c))
 sorted_sims = sorted(sims, key=lambda item: -item[1])
 
 i = 0
 for result in sorted_sims:
-    if(len(code_lines[result[0]]) < 20):
+    if(len(linecache.getline('code', result[0]+1)) < 20):
         continue
     i = i + 1
     if(i > 10):
@@ -117,11 +115,11 @@ for result in sorted_sims:
     print('post lda sim: ' + str(lda_sims[result[0]]))
     print('title lda sim: ' + str(title_lda_sims[result[0]]))
     print('title content:')
-    print(title_lines[result[0]])
+    print(linecache.getline('title', result[0]+1))
     print('code content:')
-    print(code_lines[result[0]])
+    print(linecache.getline('code', result[0]+1))
     print('post content:')
-    print(post_lines[result[0]])
+    print(linecache.getline('post', result[0]+1))
 preprocessed_file.close()
 code_file.close()
 post_file.close()

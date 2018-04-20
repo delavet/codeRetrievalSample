@@ -1,11 +1,10 @@
-from gensim import corpora, models
+from gensim import models
 from sklearn import preprocessing
-
+import linecache
+import util
 import scipy.stats
 from numpy import linalg
-from code_lda_train import MyCodeCorpus
-from LDAtrain import MyCorpus
-from title_LDAtrain import MyTitleCorpus
+from my_corpuses import MyCodeCorpus, MyCorpus, MyTitleCorpus,  p_dictionary, c_dictionary, t_dictionary
 import warnings
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
@@ -20,17 +19,21 @@ def my_cmp(x, y):
 
 
 def test_topic_num(topic_num, name):
-    preprocessed_file = open(name, 'r', encoding='utf-8')
-    texts = [line.strip('\n').split(',') for line in preprocessed_file]
-    dictionary = corpora.Dictionary(texts)
-    L = [len(text) for text in texts]
     corpus = None
+    dictionary = None
     if name == post_name:
         corpus = MyCorpus()
+        dictionary = p_dictionary
     elif name == title_name:
         corpus = MyTitleCorpus()
+        dictionary = t_dictionary
     else:
         corpus = MyCodeCorpus()
+        dictionary = c_dictionary
+    L = open('L', 'w', encoding='utf-8')
+    for line in open(name, encoding='utf-8'):
+        L.write(str(len(line.strip('\n').split(',')))+'\n')
+    L.close()
     lda = models.LdaModel(corpus, id2word=dictionary, num_topics=topic_num, iterations=4000)
     M1 = lda.get_topics()
     u, m1_sigma, vh = linalg.svd(M1)
@@ -44,11 +47,11 @@ def test_topic_num(topic_num, name):
     cm2_unorm = []
     for i in range(topic_num):
         cm2_unorm.append(0)
-    for i in range(len(texts)):
-        bow = dictionary.doc2bow(texts[i])
+    for i in range(util.file_len('L')):
+        bow = dictionary.doc2bow(linecache.getline(name, i+1).strip('\n').split(','))
         m2_vec = lda.get_document_topics(bow)
         for tp in m2_vec:
-            cm2_unorm[tp[0]] = cm2_unorm[tp[0]] + L[i]*tp[1]
+            cm2_unorm[tp[0]] = cm2_unorm[tp[0]] + int(linecache.getline('L', i+1).strip('\n'))*tp[1]
     print(cm2_unorm)
     temp = [cm2_unorm]
     cm2_a = preprocessing.normalize(temp, norm='l1')[0]
@@ -59,11 +62,11 @@ def test_topic_num(topic_num, name):
     measure = KL1 + KL2
     write_str = str(topic_num) + ':' + str(measure) + '\n'
     measure_file.write(write_str)
-    preprocessed_file.close()
 
 
 def real_test(name):
-    for num in range(10, 150):
+    for num in range(10, 100):
+        print(str(num)+' detecting')
         test_topic_num(num, name)
 
 
