@@ -1,16 +1,8 @@
 from gensim import corpora
 # must save dict before import this py file, use save_dict.py
-t_preprocessed_file = open('title_preprocessed', 'r', encoding='utf-8')
 t_dictionary = corpora.Dictionary.load("t_dict.dict")
-t_preprocessed_file.close()
-
-p_preprocessed_file = open('preprocessed', 'r', encoding='utf-8')
 p_dictionary = corpora.Dictionary.load("p_dict.dict")
-p_preprocessed_file.close()
-
-c_preprocessed_file = open('code_preprocessed', 'r', encoding='utf-8')
 c_dictionary = corpora.Dictionary.load("c_dict.dict")
-c_preprocessed_file.close()
 
 
 class MyTitleCorpus(object):
