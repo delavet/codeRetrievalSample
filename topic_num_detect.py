@@ -4,8 +4,7 @@ import linecache
 import util
 import scipy.stats
 from numpy import linalg
-from my_corpuses import MyCodeCorpus, MyCorpus, MyTitleCorpus,  p_dictionary, c_dictionary, t_dictionary
-from tqdm import tqdm  
+from my_corpuses import MyCodeCorpus, MyCorpus, MyTitleCorpus,  p_dictionary, c_dictionary, t_dictionary 
 import warnings
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
@@ -66,7 +65,7 @@ def test_topic_num(topic_num, name):
 
 
 def real_test(name):
-    for num in tqdm(range(50, 100)):
+    for num in range(50, 100):
         print(str(num)+' detecting')
         test_topic_num(num, name)
 
