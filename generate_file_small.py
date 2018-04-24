@@ -18,7 +18,14 @@ question_found = 0
 def get_by_tags():
     global question_found
     my_tag = input("generate which tag?")
-    cur.execute("SELECT \"Id\",\"Body\",\"Tags\",\"Title\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\' AND (\"Tags\" Like \'%"+my_tag+"%\')")
+    my_tags = my_tag.split(',')
+    ex = "SELECT \"Id\",\"Body\",\"Tags\",\"Title\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\' AND (\"Tags\" Like \'%"
+    for m in range(len(my_tags)):
+        if m == (len(my_tags) - 1):
+            ex = ex + my_tags[m] + "%\')"
+        else:
+            ex = ex + my_tags[m] + "%\' OR \"Tags\" Like \'%"
+    cur.execute(ex)
     while 1:
         row = cur.fetchone()
         if row is None:
