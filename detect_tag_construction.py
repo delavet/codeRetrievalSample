@@ -10,7 +10,7 @@ sys.stdout = tag_construction_file
 
 
 def get_tags():
-    cur.execute("SELECT \"Tags\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\' LIMIT 500000")
+    cur.execute("SELECT \"Tags\" FROM posts WHERE \"PostTypeId\" = 1 AND \"Tags\" Like \'%<java>%\'")
     while 1:
         row = cur.fetchone()
         if row is None:
