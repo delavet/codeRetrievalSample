@@ -12,14 +12,13 @@ post_name = 'preprocessed'
 title_name = 'title_preprocessed'
 code_name = 'code_preprocessed'
 measure_name = 'measure'
-measure_file = None
 
 
 def my_cmp(x, y):
     return y - x
 
 
-def test_topic_num(topic_num, name):
+def test_topic_num(topic_num, name, measure_file):
     corpus = None
     dictionary = None
     if name == post_name:
@@ -66,12 +65,12 @@ def test_topic_num(topic_num, name):
 
 
 def real_test(name):
-    measure_file = open(name+measure_name, 'w', encoding='utf-8')
+    measure_f = open(name+measure_name, 'w', encoding='utf-8')
     for num in range(20, 100):
         if num % 2 == 0:
             print(str(num)+' detecting')
-            test_topic_num(num, name)
-    measure_file.close()
+            test_topic_num(num, name, measure_f)
+    measure_f.close()
 
 
 i = input('train what?t p or c?')
