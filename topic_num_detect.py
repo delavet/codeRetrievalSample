@@ -75,6 +75,7 @@ def real_test(name):
 
 i = input('train what?t p or c?')
 if i == 't':
+    print('detect a t!')
     real_test(title_name)
 elif i == 'p':
     real_test(post_name)
