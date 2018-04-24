@@ -65,9 +65,10 @@ def test_topic_num(topic_num, name):
 
 
 def real_test(name):
-    for num in range(50, 100):
-        print(str(num)+' detecting')
-        test_topic_num(num, name)
+    for num in range(20, 100):
+        if num % 2 == 0:
+            print(str(num)+' detecting')
+            test_topic_num(num, name)
 
 
 i = input('train what?t p or c?')
