@@ -4,7 +4,7 @@ from pprint import pprint
 from my_corpuses import MyCorpus, p_dictionary
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
-number = 20
+number = int(input("input topic num:"))
 
 
 def train():
