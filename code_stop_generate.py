@@ -1,7 +1,7 @@
 from collections import defaultdict
 import heapq
 all_cnt = 16986
-elect = 100
+elect = 200
 unigram_file = open('code_unigram_stops', 'w', encoding='utf-8')
 preprocessed_file = open('code_mid_preprocessed1', 'r', encoding='utf-8')
 frequency = defaultdict(int)
