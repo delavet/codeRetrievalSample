@@ -96,7 +96,7 @@ for i in range(len(tfidf_sims)):
     c = title_tfidf_sims[i]
     if a < 0.5 and b > 0.7:
         b = 0.7
-    pure_tfidf_sims.append((i, 2*a+b+4*c))
+    pure_tfidf_sims.append((i, 2*a+b+c))
 
 sorted_pure_tfidf_sims = sorted(pure_tfidf_sims, key=lambda item: -item[1])
 
