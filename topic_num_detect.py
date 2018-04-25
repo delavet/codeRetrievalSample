@@ -11,7 +11,7 @@ warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 post_name = 'preprocessed'
 title_name = 'title_preprocessed'
 code_name = 'code_preprocessed'
-measure_name = 'measure'
+measure_name = '_measure.csv'
 
 
 def my_cmp(x, y):
@@ -60,12 +60,13 @@ def test_topic_num(topic_num, name, measure_file):
     KL1 = scipy.stats.entropy(cm1, cm2)
     KL2 = scipy.stats.entropy(cm2, cm1)
     measure = KL1 + KL2
-    write_str = str(topic_num) + ':' + str(measure) + '\n'
+    write_str = str(topic_num) + ',' + str(measure) + '\n'
     measure_file.write(write_str)
 
 
 def real_test(name):
     measure_f = open(name+measure_name, 'w', encoding='utf-8')
+    measure_f.write('topic num,KL\n')
     for num in range(20, 100):
         if num % 2 == 0:
             print(str(num)+' detecting')
@@ -78,7 +79,9 @@ if i == 't':
     print('detect a t!')
     real_test(title_name)
 elif i == 'p':
+    print('detect a p!')
     real_test(post_name)
 else:
+    print('detect a c!')
     real_test(code_name)
 print('done')
