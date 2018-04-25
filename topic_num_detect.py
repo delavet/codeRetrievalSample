@@ -30,10 +30,9 @@ def test_topic_num(topic_num, name, measure_file):
     else:
         corpus = MyCodeCorpus()
         dictionary = c_dictionary
-    L = open('L', 'w', encoding='utf-8')
+    L = []
     for line in open(name, encoding='utf-8'):
-        L.write(str(len(line.strip('\n').split(',')))+'\n')
-    L.close()
+        L.append(len(line.strip('\n').split(',')))
     lda = models.LdaModel(corpus, id2word=dictionary, num_topics=topic_num, iterations=4000)
     M1 = lda.get_topics()
     u, m1_sigma, vh = linalg.svd(M1)
@@ -51,7 +50,7 @@ def test_topic_num(topic_num, name, measure_file):
         bow = dictionary.doc2bow(linecache.getline(name, i+1).strip('\n').split(','))
         m2_vec = lda.get_document_topics(bow)
         for tp in m2_vec:
-            cm2_unorm[tp[0]] = cm2_unorm[tp[0]] + int(linecache.getline('L', i+1).strip('\n'))*tp[1]
+            cm2_unorm[tp[0]] = cm2_unorm[tp[0]] + L[i]*tp[1]
     print(cm2_unorm)
     temp = [cm2_unorm]
     cm2_a = preprocessing.normalize(temp, norm='l1')[0]
