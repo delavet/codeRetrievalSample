@@ -66,7 +66,7 @@ def test_topic_num(topic_num, name, measure_file):
 def real_test(name):
     measure_f = open(name+measure_name, 'w', encoding='utf-8')
     measure_f.write('topic num,KL\n')
-    for num in range(20, 92):
+    for num in range(20, 82):
         if num % 2 == 0:
             print(str(num)+' detecting')
             test_topic_num(num, name, measure_f)
