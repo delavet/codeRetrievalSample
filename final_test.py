@@ -1,43 +1,46 @@
-from gensim import models, similarities
+from gensim import corpora, models, similarities
 from nltk.tokenize import word_tokenize
 from nltk.stem.porter import PorterStemmer
-from my_corpuses import c_dictionary, t_dictionary, p_dictionary
 import linecache
 import sys
 import warnings
 
 
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
-trained_model = 'trained_LDA_model.model'
-trained_index = 'trained_LDA_index.index'
-tfidf_model = 'tfidf_for_LDA.model'
-tfidf_index = similarities.MatrixSimilarity.load('trained_tfidf_for_LDA_index.index')
-code_trained_model = 'code_trained_LDA_model.model'
-code_trained_index = 'code_trained_LDA_index.index'
-code_tfidf_model = 'code_tfidf_for_LDA.model'
-code_tfidf_index = similarities.MatrixSimilarity.load('code_trained_tfidf_for_LDA_index.index')
-title_trained_model = 'title_trained_LDA_model.model'
-title_trained_index = 'title_trained_LDA_index.index'
-title_tfidf_model = 'title_tfidf_for_LDA.model'
-title_tfidf_index = similarities.MatrixSimilarity.load('title_trained_tfidf_for_LDA_index.index')
+cat = input("which model do you want to use?") + '/'
+t_dictionary = corpora.Dictionary.load(cat+"t_dict.dict")
+p_dictionary = corpora.Dictionary.load(cat+"p_dict.dict")
+c_dictionary = corpora.Dictionary.load(cat+"c_dict.dict")
+trained_model = cat + 'trained_LDA_model.model'
+trained_index = cat + 'trained_LDA_index.index'
+tfidf_model = cat + 'tfidf_for_LDA.model'
+tfidf_index = similarities.MatrixSimilarity.load(cat + 'trained_tfidf_for_LDA_index.index')
+code_trained_model = cat + 'code_trained_LDA_model.model'
+code_trained_index = cat + 'code_trained_LDA_index.index'
+code_tfidf_model = cat + 'code_tfidf_for_LDA.model'
+code_tfidf_index = similarities.MatrixSimilarity.load(cat + 'code_trained_tfidf_for_LDA_index.index')
+title_trained_model = cat + 'title_trained_LDA_model.model'
+title_trained_index = cat + 'title_trained_LDA_index.index'
+title_tfidf_model = cat + 'title_tfidf_for_LDA.model'
+title_tfidf_index = similarities.MatrixSimilarity.load(cat + 'title_trained_tfidf_for_LDA_index.index')
 query = input("input query:")
 result_file = open(query+".txt", 'w', encoding='utf-8')
 sys.stdout = result_file
 
-post_file = open('post', 'r', encoding='utf-8')
-code_file = open('code', 'r', encoding='utf-8')
-title_file = open('title', 'r', encoding='utf-8')
+post_file = open(cat + 'post', 'r', encoding='utf-8')
+code_file = open(cat + 'code', 'r', encoding='utf-8')
+title_file = open(cat + 'title', 'r', encoding='utf-8')
 
-stemmed_file = open('preprocessed', 'r', encoding='utf-8')
-stopwords_file = open('unigram_stops', 'r', encoding='utf-8')
-code_stemmed_file = open('code_preprocessed', 'r', encoding='utf-8')
-code_stopwords_file = open('code_unigram_stops', 'r', encoding='utf-8')
-title_stemmed_file = open('title_preprocessed', 'r', encoding='utf-8')
-title_stopwords_file = open('title_unigram_stops', 'r', encoding='utf-8')
+stemmed_file = open(cat + 'preprocessed', 'r', encoding='utf-8')
+stopwords_file = open(cat + 'unigram_stops', 'r', encoding='utf-8')
+code_stemmed_file = open(cat + 'code_preprocessed', 'r', encoding='utf-8')
+code_stopwords_file = open(cat + 'code_unigram_stops', 'r', encoding='utf-8')
+title_stemmed_file = open(cat + 'title_preprocessed', 'r', encoding='utf-8')
+title_stopwords_file = open(cat + 'title_unigram_stops', 'r', encoding='utf-8')
 
-preprocessed_file = open('preprocessed', 'r', encoding='utf-8')
-code_preprocessed_file = open('code_preprocessed', 'r', encoding='utf-8')
-title_preprocessed_file = open('title_preprocessed', 'r', encoding='utf-8')
+preprocessed_file = open(cat + 'preprocessed', 'r', encoding='utf-8')
+code_preprocessed_file = open(cat + 'code_preprocessed', 'r', encoding='utf-8')
+title_preprocessed_file = open(cat + 'title_preprocessed', 'r', encoding='utf-8')
 dictionary = p_dictionary
 code_dictionary = c_dictionary
 title_dictionary = t_dictionary
@@ -129,7 +132,7 @@ sorted_sims = sorted(sims, key=lambda item: -item[1])
 print("my method")
 i = 0
 for result in sorted_sims:
-    if(len(linecache.getline('code', result[0]+1)) < 20):
+    if(len(linecache.getline(cat + 'code', result[0]+1)) < 20):
         continue
     i = i + 1
     if(i > 10):
@@ -142,16 +145,16 @@ for result in sorted_sims:
     print('post lda sim: ' + str(lda_sims[result[0]]))
     print('title lda sim: ' + str(title_lda_sims[result[0]]))
     print('title content:')
-    print(linecache.getline('title', result[0]+1))
+    print(linecache.getline(cat + 'title', result[0]+1))
     print('code content:')
-    print(linecache.getline('code', result[0]+1))
+    print(linecache.getline(cat + 'code', result[0]+1).replace('\t', '\n'))
     print('post content:')
-    print(linecache.getline('post', result[0]+1))
+    print(linecache.getline(cat + 'post', result[0]+1))
 
 print("pure_lda_sims")
 i = 0
 for result in sorted_pure_lda_sims:
-    if(len(linecache.getline('code', result[0]+1)) < 20):
+    if(len(linecache.getline(cat + 'code', result[0]+1)) < 20):
         continue
     i = i + 1
     if(i > 10):
@@ -164,16 +167,16 @@ for result in sorted_pure_lda_sims:
     print('post lda sim: ' + str(lda_sims[result[0]]))
     print('title lda sim: ' + str(title_lda_sims[result[0]]))
     print('title content:')
-    print(linecache.getline('title', result[0]+1))
+    print(linecache.getline(cat + 'title', result[0]+1))
     print('code content:')
-    print(linecache.getline('code', result[0]+1))
+    print(linecache.getline(cat + 'code', result[0]+1).replace('\t', '\n'))
     print('post content:')
-    print(linecache.getline('post', result[0]+1))
+    print(linecache.getline(cat + 'post', result[0]+1))
 
 print("pure_tfidf_sims")
 i = 0
 for result in sorted_sims:
-    if(len(linecache.getline('code', result[0]+1)) < 20):
+    if(len(linecache.getline(cat + 'code', result[0]+1)) < 20):
         continue
     i = i + 1
     if(i > 10):
@@ -186,11 +189,11 @@ for result in sorted_sims:
     print('post lda sim: ' + str(lda_sims[result[0]]))
     print('title lda sim: ' + str(title_lda_sims[result[0]]))
     print('title content:')
-    print(linecache.getline('title', result[0]+1))
+    print(linecache.getline(cat + 'title', result[0]+1))
     print('code content:')
-    print(linecache.getline('code', result[0]+1))
+    print(linecache.getline(cat + 'code', result[0]+1).replace('\t', '\n'))
     print('post content:')
-    print(linecache.getline('post', result[0]+1))
+    print(linecache.getline(cat + 'post', result[0]+1))
 preprocessed_file.close()
 code_file.close()
 post_file.close()

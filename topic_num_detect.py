@@ -1,10 +1,9 @@
 from gensim import models
 from sklearn import preprocessing
 import linecache
-import util
 import scipy.stats
 from numpy import linalg
-from my_corpuses import MyCodeCorpus, MyCorpus, MyTitleCorpus,  p_dictionary, c_dictionary, t_dictionary 
+from my_corpuses import MyCodeCorpus, MyCorpus, MyTitleCorpus,  p_dictionary, c_dictionary, t_dictionary
 import warnings
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 
@@ -46,7 +45,7 @@ def test_topic_num(topic_num, name, measure_file):
     cm2_unorm = []
     for i in range(topic_num):
         cm2_unorm.append(0)
-    for i in range(util.file_len('L')):
+    for i in range(len(L)):
         bow = dictionary.doc2bow(linecache.getline(name, i+1).strip('\n').split(','))
         m2_vec = lda.get_document_topics(bow)
         for tp in m2_vec:
