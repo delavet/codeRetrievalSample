@@ -89,7 +89,7 @@ title_tfidf_sims = title_tfidf_index[title_q_tfidf]
 title_lda_sims = title_index[title_q_lda]
 
 
-filtered_num = [sim[0] for sim in enumerate(code_lda_sims) if sim[1] <= 0.8]
+filtered_num = [sim[0] for sim in enumerate(code_lda_sims) if sim[1] <= 0.9]
 sims = []
 pure_lda_sims = []
 pure_tfidf_sims = []
@@ -117,7 +117,6 @@ sorted_pure_lda_sims = sorted(pure_lda_sims, key=lambda item: -item[1])
 
 for num in filtered_num:
     tfidf_sims[num] = 0.0
-    lda_sims[num] = 0.0
     code_tfidf_sims[num] = 0.0
     title_tfidf_sims[num] = 0.0
 
@@ -180,7 +179,7 @@ for result in sorted_pure_lda_sims:
 
 print("pure_tfidf_sims")
 i = 0
-for result in sorted_sims:
+for result in sorted_pure_tfidf_sims:
     if(len(linecache.getline(cat + 'code', result[0]+1)) < 20):
         continue
     i = i + 1
