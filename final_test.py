@@ -89,7 +89,7 @@ title_tfidf_sims = title_tfidf_index[title_q_tfidf]
 title_lda_sims = title_index[title_q_lda]
 
 
-filtered_num = [sim[0] for sim in enumerate(code_lda_sims) if sim[1] <= 0.7]
+filtered_num = [sim[0] for sim in enumerate(code_lda_sims) if sim[1] <= 0.8]
 sims = []
 pure_lda_sims = []
 pure_tfidf_sims = []
