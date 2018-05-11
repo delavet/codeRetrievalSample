@@ -14,15 +14,15 @@ c_dictionary = corpora.Dictionary.load(cat+"c_dict.dict")
 trained_model = cat + 'trained_LDA_model.model'
 trained_index = cat + 'trained_LDA_index.index'
 tfidf_model = cat + 'tfidf_for_LDA.model'
-tfidf_index = similarities.MatrixSimilarity.load(cat + 'trained_tfidf_for_LDA_index.index')
+
 code_trained_model = cat + 'code_trained_LDA_model.model'
 code_trained_index = cat + 'code_trained_LDA_index.index'
 code_tfidf_model = cat + 'code_tfidf_for_LDA.model'
-code_tfidf_index = similarities.MatrixSimilarity.load(cat + 'code_trained_tfidf_for_LDA_index.index')
+
 title_trained_model = cat + 'title_trained_LDA_model.model'
 title_trained_index = cat + 'title_trained_LDA_index.index'
 title_tfidf_model = cat + 'title_tfidf_for_LDA.model'
-title_tfidf_index = similarities.MatrixSimilarity.load(cat + 'title_trained_tfidf_for_LDA_index.index')
+
 query = input("input query:")
 result_file = open(query+".txt", 'w', encoding='utf-8')
 sys.stdout = result_file
@@ -47,13 +47,13 @@ code_dictionary = c_dictionary
 title_dictionary = t_dictionary
 
 lda = models.LdaModel.load(trained_model)
-index = similarities.MatrixSimilarity.load(trained_index)
+
 tfidf = models.TfidfModel.load(tfidf_model)
 code_lda = models.LdaModel.load(code_trained_model)
-code_index = similarities.MatrixSimilarity.load(code_trained_index)
+
 code_tfidf = models.TfidfModel.load(code_tfidf_model)
 title_lda = models.LdaModel.load(title_trained_model)
-title_index = similarities.MatrixSimilarity.load(title_trained_index)
+
 title_tfidf = models.TfidfModel.load(title_tfidf_model)
 
 q_tokenized = [word.lower() for word in word_tokenize(query)]
@@ -81,12 +81,24 @@ code_q_tfidf = code_tfidf[code_q_bow]
 title_q_lda = title_lda[title_q_bow]
 title_q_tfidf = title_tfidf[title_q_bow]
 
+tfidf_index = similarities.MatrixSimilarity.load(cat + 'trained_tfidf_for_LDA_index.index')
 tfidf_sims = tfidf_index[q_tfidf]
+del tfidf_index
+index = similarities.MatrixSimilarity.load(trained_index)
 lda_sims = index[q_lda]
+del index
+code_tfidf_index = similarities.MatrixSimilarity.load(cat + 'code_trained_tfidf_for_LDA_index.index')
 code_tfidf_sims = code_tfidf_index[code_q_tfidf]
+del code_tfidf_index
+code_index = similarities.MatrixSimilarity.load(code_trained_index)
 code_lda_sims = code_index[code_q_lda]
+del code_index
+title_tfidf_index = similarities.MatrixSimilarity.load(cat + 'title_trained_tfidf_for_LDA_index.index')
 title_tfidf_sims = title_tfidf_index[title_q_tfidf]
+del title_tfidf_index
+title_index = similarities.MatrixSimilarity.load(title_trained_index)
 title_lda_sims = title_index[title_q_lda]
+del title_index
 
 
 filtered_num = [sim[0] for sim in enumerate(code_lda_sims) if sim[1] <= 0.9]
@@ -94,7 +106,7 @@ sims = []
 pure_lda_sims = []
 pure_tfidf_sims = []
 
-for i in range(len(tfidf_sims)):
+for i in range(len(tfidf_sims) - 1):
     a = code_tfidf_sims[i]
     b = tfidf_sims[i]
     c = title_tfidf_sims[i]
@@ -104,7 +116,7 @@ for i in range(len(tfidf_sims)):
 
 sorted_pure_tfidf_sims = sorted(pure_tfidf_sims, key=lambda item: -item[1])
 
-for i in range(len(tfidf_sims)):
+for i in range(len(tfidf_sims) - 1):
     a = code_lda_sims[i]
     b = lda_sims[i]
     c = title_lda_sims[i]
@@ -120,7 +132,7 @@ for num in filtered_num:
     code_tfidf_sims[num] = 0.0
     title_tfidf_sims[num] = 0.0
 
-for i in range(len(tfidf_sims)):
+for i in range(len(tfidf_sims) - 1):
     a = code_tfidf_sims[i]
     b = tfidf_sims[i]
     c = title_tfidf_sims[i]
