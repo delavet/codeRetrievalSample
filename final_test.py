@@ -105,6 +105,7 @@ filtered_num = [sim[0] for sim in enumerate(code_lda_sims) if sim[1] <= 0.9]
 sims = []
 pure_lda_sims = []
 pure_tfidf_sims = []
+print("len of tfidf_sims"+str(len(tfidf_sims)))
 
 for i in range(len(tfidf_sims) - 1):
     a = code_tfidf_sims[i]
