@@ -107,7 +107,7 @@ pure_lda_sims = []
 pure_tfidf_sims = []
 print("len of tfidf_sims"+str(len(tfidf_sims)))
 
-for i in range(len(tfidf_sims) - 1):
+for i in range(len(tfidf_sims)):
     a = code_tfidf_sims[i]
     b = tfidf_sims[i]
     c = title_tfidf_sims[i]
@@ -117,7 +117,7 @@ for i in range(len(tfidf_sims) - 1):
 
 sorted_pure_tfidf_sims = sorted(pure_tfidf_sims, key=lambda item: -item[1])
 
-for i in range(len(tfidf_sims) - 1):
+for i in range(len(tfidf_sims)):
     a = code_lda_sims[i]
     b = lda_sims[i]
     c = title_lda_sims[i]
@@ -133,7 +133,7 @@ for num in filtered_num:
     code_tfidf_sims[num] = 0.0
     title_tfidf_sims[num] = 0.0
 
-for i in range(len(tfidf_sims) - 1):
+for i in range(len(tfidf_sims)):
     a = code_tfidf_sims[i]
     b = tfidf_sims[i]
     c = title_tfidf_sims[i]

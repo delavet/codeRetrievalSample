@@ -45,6 +45,7 @@ def get_by_tags():
         temp_body = row[1]
         for answer in answers:
             temp_body = temp_body + answer[0]
+        temp_body = temp_body.replace('&#xD', ',').replace('&#xA', ',').replace('&#13;', ',')
         soup = BeautifulSoup(temp_body, "lxml")
         temp_code = ''
         for code in soup.find_all('pre'):
@@ -57,11 +58,6 @@ def get_by_tags():
             post_str = str((soup.get_text(separator=",").replace('\r\n', ' ').replace('\n', ' ')))+'\n'
             code_str = str((temp_code.expandtabs(1).replace('\r\n', '\t').replace('\n', '\t')))+'\n'
             title_str = str((row[3].replace('\r\n', ' ').replace('\n', ' ')))+'\n'
-            id_str = id_str.encode("utf-8", "surrogateescape").decode("utf-8")
-            body_str = body_str.encode("utf-8", "surrogateescape").decode("utf-8")
-            post_str = post_str.encode("utf-8", "surrogateescape").decode("utf-8")
-            code_str = code_str.encode("utf-8", "surrogateescape").decode("utf-8")
-            title_str = title_str.encode("utf-8", "surrogateescape").decode("utf-8")
             tbody.write(post_str)
         except Exception:
             pass
