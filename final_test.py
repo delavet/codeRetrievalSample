@@ -111,8 +111,8 @@ for i in range(len(tfidf_sims)):
     a = code_tfidf_sims[i]
     b = tfidf_sims[i]
     c = title_tfidf_sims[i]
-    if a < 0.5 and b > 0.7:
-        b = 0.7
+    if a < 0.5 and b > 0.8:
+        b = 0.8
     pure_tfidf_sims.append((i, 2*a+b+4*c))
 
 sorted_pure_tfidf_sims = sorted(pure_tfidf_sims, key=lambda item: -item[1])
@@ -121,8 +121,8 @@ for i in range(len(tfidf_sims)):
     a = code_lda_sims[i]
     b = lda_sims[i]
     c = title_lda_sims[i]
-    if a < 0.5 and b > 0.7:
-        b = 0.7
+    if a < 0.5 and b > 0.8:
+        b = 0.8
     pure_lda_sims.append((i, a+b+c))
 
 sorted_pure_lda_sims = sorted(pure_lda_sims, key=lambda item: -item[1])
@@ -137,8 +137,8 @@ for i in range(len(tfidf_sims)):
     a = code_tfidf_sims[i]
     b = tfidf_sims[i]
     c = title_tfidf_sims[i]
-    if a < 0.5 and b > 0.7:
-        b = 0.7
+    if a < 0.5 and b > 0.8:
+        b = 0.8
     sims.append((i, 2*a+b+4*c))
 sorted_sims = sorted(sims, key=lambda item: -item[1])
 
@@ -148,9 +148,9 @@ for result in sorted_sims:
     if(len(linecache.getline(cat + 'code', result[0]+1)) < 20):
         continue
     i = i + 1
-    if(i > 10):
+    if(i > 5):
         break
-    print('result NO.' + str(i))
+    print('result NO.' + str(i) + '\n')
     print('code tfidf sim: ' + str(code_tfidf_sims[result[0]]))
     print('post tfidf sim: ' + str(tfidf_sims[result[0]]))
     print('title tfidf sim:' + str(title_lda_sims[result[0]]))
@@ -172,9 +172,9 @@ for result in sorted_pure_lda_sims:
     if(len(linecache.getline(cat + 'code', result[0]+1)) < 20):
         continue
     i = i + 1
-    if(i > 10):
+    if(i > 5):
         break
-    print('result NO.' + str(i))
+    print('result NO.' + str(i) + '\n')
     print('code tfidf sim: ' + str(code_tfidf_sims[result[0]]))
     print('post tfidf sim: ' + str(tfidf_sims[result[0]]))
     print('title tfidf sim:' + str(title_lda_sims[result[0]]))
@@ -196,9 +196,9 @@ for result in sorted_pure_tfidf_sims:
     if(len(linecache.getline(cat + 'code', result[0]+1)) < 20):
         continue
     i = i + 1
-    if(i > 10):
+    if(i > 5):
         break
-    print('result NO.' + str(i))
+    print('result NO.' + str(i) + '\n')
     print('code tfidf sim: ' + str(code_tfidf_sims[result[0]]))
     print('post tfidf sim: ' + str(tfidf_sims[result[0]]))
     print('title tfidf sim:' + str(title_lda_sims[result[0]]))
