@@ -101,7 +101,7 @@ title_lda_sims = title_index[title_q_lda]
 del title_index
 
 
-filtered_num = [sim[0] for sim in enumerate(code_lda_sims) if sim[1] <= 0.9]
+filtered_num = [sim[0] for sim in enumerate(code_lda_sims) if sim[1] <= 0.7]
 sims = []
 pure_lda_sims = []
 pure_tfidf_sims = []
